@@ -45,7 +45,7 @@ CellModel.prototype.setStatus = function (status) {
 }
 
 CellModel.prototype.moveToAndBack = function (pos) {
-    var srcPos = cc.p(this.x, this.y);
+    var srcPos = cc.v2(this.x, this.y);
     this.cmd.push({
         action: "moveTo",
         keepTime: ANITIME.TOUCH_MOVE,
@@ -61,7 +61,7 @@ CellModel.prototype.moveToAndBack = function (pos) {
 }
 
 CellModel.prototype.moveTo = function (pos, playTime) {
-    var srcPos = cc.p(this.x, this.y);
+    var srcPos = cc.v2(this.x, this.y);
     this.cmd.push({
         action: "moveTo",
         keepTime: ANITIME.TOUCH_MOVE,

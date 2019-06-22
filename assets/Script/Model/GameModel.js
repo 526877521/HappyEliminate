@@ -7,7 +7,7 @@ import {CELL_TYPE, CELL_BASENUM, CELL_STATUS, GRID_WIDTH, GRID_HEIGHT, ANITIME} 
 export default function GameModel() {
     this.cells = null;//二维数组
     this.cellBgs = null;//暂时无用
-    this.lastPos = cc.p(-1, -1);//上次点击的位置
+    this.lastPos = cc.v2(-1, -1);//上次点击的位置
     this.cellTypeNum = 5;
     this.cellCreateType = []; // 升成种类只在这个数组里面查找
 }
@@ -54,10 +54,10 @@ GameModel.prototype.checkPoint = function (x, y) {
         let queue = [];
         let vis = [];
         vis[x + y * 9] = true;
-        queue.push(cc.p(x, y));
+        queue.push(cc.v2(x, y));
         let front = 0;
         while (front < queue.length) {
-            //let direction = [cc.p(0, -1), cc.p(0, 1), cc.p(1, 0), cc.p(-1, 0)];
+            //let direction = [cc.v2(0, -1), cc.v2(0, 1), cc.v2(1, 0), cc.v2(-1, 0)];
             let point = queue[front];
             let cellModel = this.cells[point.y][point.x];
             front++;
@@ -75,14 +75,14 @@ GameModel.prototype.checkPoint = function (x, y) {
                 }
                 if (cellModel.type == this.cells[tmpY][tmpX].type) {
                     vis[tmpX + tmpY * 9] = true;
-                    queue.push(cc.p(tmpX, tmpY));
+                    queue.push(cc.v2(tmpX, tmpY));
                 }
             }
         }
         return queue;
     }
-    let rowResult = checkWithDirection.call(this, x, y, [cc.p(1, 0), cc.p(-1, 0)]);
-    let colResult = checkWithDirection.call(this, x, y, [cc.p(0, -1), cc.p(0, 1)]);
+    let rowResult = checkWithDirection.call(this, x, y, [cc.v2(1, 0), cc.v2(-1, 0)]);
+    let colResult = checkWithDirection.call(this, x, y, [cc.v2(0, -1), cc.v2(0, 1)]);
     let result = [];
     let newCellStatus = "";
     if (rowResult.length >= 5 || colResult.length >= 5) {
@@ -155,11 +155,11 @@ GameModel.prototype.selectCell = function (pos) {
         this.exchangeCell(lastPos, pos);
         this.cells[pos.y][pos.x].moveToAndBack(lastPos);
         this.cells[lastPos.y][lastPos.x].moveToAndBack(pos);
-        this.lastPos = cc.p(-1, -1);
+        this.lastPos = cc.v2(-1, -1);
         return [this.changeModels];
     }
     else {
-        this.lastPos = cc.p(-1, -1);
+        this.lastPos = cc.v2(-1, -1);
         this.cells[pos.y][pos.x].moveTo(pos, this.curTime);
         this.cells[lastPos.y][lastPos.x].moveTo(lastPos, this.curTime);
         var checkPoint = [pos, lastPos];
@@ -251,7 +251,7 @@ GameModel.prototype.down = function () {
                         this.cells[curRow][j] = this.cells[k][j];
                         this.cells[k][j] = null;
                         this.cells[curRow][j].setXY(j, curRow);
-                        this.cells[curRow][j].moveTo(cc.p(j, curRow), this.curTime);
+                        this.cells[curRow][j].moveTo(cc.v2(j, curRow), this.curTime);
                         curRow++;
                     }
                 }
@@ -261,7 +261,7 @@ GameModel.prototype.down = function () {
                     this.cells[k][j].init(this.getRandomCellType());
                     this.cells[k][j].setStartXY(j, count + GRID_HEIGHT);
                     this.cells[k][j].setXY(j, count + GRID_HEIGHT);
-                    this.cells[k][j].moveTo(cc.p(j, k), this.curTime);
+                    this.cells[k][j].moveTo(cc.v2(j, k), this.curTime);
                     count++;
                     this.changeModels.push(this.cells[k][j]);
                     newCheckPoint.push(this.cells[k][j]);
@@ -337,7 +337,7 @@ GameModel.prototype.processBomb = function (bombModels) {
                         this.crushCell(i, model.y);
                     }
                 }
-                this.addRowBomb(this.curTime, cc.p(model.x, model.y));
+                this.addRowBomb(this.curTime, cc.v2(model.x, model.y));
             }
             else if (model.status === CELL_STATUS.COLUMN) {
                 for (let i = 1; i <= GRID_HEIGHT; i++) {
@@ -348,7 +348,7 @@ GameModel.prototype.processBomb = function (bombModels) {
                         this.crushCell(model.x, i);
                     }
                 }
-                this.addColBomb(this.curTime, cc.p(model.x, model.y));
+                this.addColBomb(this.curTime, cc.v2(model.x, model.y));
             }
             else if (model.status == CELL_STATUS.WRAP) {
                 let x = model.x;
@@ -431,6 +431,6 @@ GameModel.prototype.crushCell = function (x, y, needShake) {
     else {
         model.toDie(this.curTime);
     }
-    this.addCrushEffect(this.curTime, cc.p(model.x, model.y));
+    this.addCrushEffect(this.curTime, cc.v2(model.x, model.y));
     this.cells[y][x] = null;
 }

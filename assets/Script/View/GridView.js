@@ -89,7 +89,7 @@ cc.Class({
         }
         var x = Math.floor(pos.x / CELL_WIDTH) + 1;
         var y = Math.floor(pos.y / CELL_HEIGHT) + 1;
-        return cc.p(x, y);
+        return cc.v2(x, y);
     },
     updateView: function(changeModels){
         let newCellViewInfo = [];
@@ -182,7 +182,7 @@ cc.Class({
         this.updateView(changeModels);
         this.controller.cleanCmd(); 
         if(changeModels.length >= 2){
-            this.updateSelect(cc.p(-1,-1));
+            this.updateSelect(cc.v2(-1,-1));
         }
         else{
             this.updateSelect(cellPos);
